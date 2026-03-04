@@ -1,0 +1,9 @@
+pytorch
+pytorch-lightning
+clearml
+rich
+tqdm
+split-folders
+simple-parsing
+streamlit
+albumentations

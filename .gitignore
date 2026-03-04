@@ -1,5 +1,7 @@
 *.zip
 *.log
 *.ckpt
+*.pyc
 logs/
 test_images/
+.env

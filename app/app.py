@@ -14,25 +14,22 @@ import streamlit as st
 import torch
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
-
+from transformers import AutoImageProcessor
 from model import Classifier
 
 # Load the model
-model = Classifier.load_from_checkpoint("./models/checkpoint.ckpt")
-model.eval()
+# model = Classifier.load_from_checkpoint("./models/checkpoint.ckpt")
+# model.eval()
+
+
+#extractor = AutoFeatureExtractor.from_pretrained("chriamue/bird-species-classifier")
+model = AutoImageProcessor.from_pretrained("chriamue/bird-species-classifier")
+
+
 
 # Define labels
 labels = [
-    "dog",
-    "horse",
-    "elephant",
-    "butterfly",
-    "chicken",
-    "cat",
-    "cow",
-    "sheep",
-    "spider",
-    "squirrel",
+    "dog"
 ]
 
 # Preprocess function
@@ -47,12 +44,7 @@ def preprocess(image):
 
 
 # Define the sample images
-sample_images = {
-    "butterfly": "./test_images/butterfly.jpg",
-    "cat": "./test_images/cat.jpg",
-    "dog": "./test_images/dog.jpeg",
-    "squirrel": "./test_images/squirrel.jpeg",
-    "horse": "./test_images/horse.jpeg",
+sample_images = {"dog": "./test_images/dog.jpeg",
 }
 
 # Define the function to make predictions on an image
@@ -95,13 +87,13 @@ def app():
     # If an image is uploaded, make a prediction on it
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image.", use_column_width=True)
+        st.image(image, caption="Uploaded Image.", width=300)
         predictions = predict(image)
 
     # If a sample image is chosen, make a prediction on it
     elif sample:
         image = Image.open(sample_images[sample])
-        st.image(image, caption=sample.capitalize() + " Image.", use_column_width=True)
+        st.image(image, caption=sample.capitalize() + " Image.", width=300)
         predictions = predict(image)
 
     # Show the top 3 predictions with their probabilities
