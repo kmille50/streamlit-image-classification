@@ -14,15 +14,17 @@ import streamlit as st
 import torch
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
-from transformers import AutoImageProcessor
+from transformers import AutoImageProcessor, pipeline
 from model import Classifier
 
-# Load the model
-# model = Classifier.load_from_checkpoint("./models/checkpoint.ckpt")
-# model.eval()
+# Use a pipeline as a high-level helper
+from transformers import pipeline
+
+pipe = pipeline("image-classification", model="chriamue/bird-species-classifier")
+pipe("https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/hub/parrots.png")
 
 
-#extractor = AutoFeatureExtractor.from_pretrained("chriamue/bird-species-classifier")
+processor = AutoImageProcessor.from_pretrained("chriamue/bird-species-classifier")
 model = AutoImageProcessor.from_pretrained("chriamue/bird-species-classifier")
 
 
@@ -81,8 +83,6 @@ def app():
     # Add a file uploader
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-    # # Add a selectbox to choose from sample images
-    sample = st.selectbox("Or choose from sample images:", list(sample_images.keys()))
 
     # If an image is uploaded, make a prediction on it
     if uploaded_file is not None:
@@ -90,11 +90,6 @@ def app():
         st.image(image, caption="Uploaded Image.", width=300)
         predictions = predict(image)
 
-    # If a sample image is chosen, make a prediction on it
-    elif sample:
-        image = Image.open(sample_images[sample])
-        st.image(image, caption=sample.capitalize() + " Image.", width=300)
-        predictions = predict(image)
 
     # Show the top 3 predictions with their probabilities
     if predictions:
